@@ -5,7 +5,24 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./guild.db")
+ON_VERCEL = bool(os.getenv("VERCEL"))
+
+
+def _database_url() -> str:
+    """Pick the database. Hosted Postgres URLs are rewritten to use the psycopg 3 driver."""
+    url = os.getenv("DATABASE_URL") or os.getenv("POSTGRES_URL")
+    if not url:
+        # Vercel's filesystem is read-only except /tmp, and /tmp is wiped between cold starts,
+        # so this fallback only keeps a deploy from crashing. Connect a Postgres database for real data.
+        return "sqlite:////tmp/guild.db" if ON_VERCEL else "sqlite:///./guild.db"
+    if url.startswith("postgres://"):
+        url = "postgresql://" + url[len("postgres://"):]
+    if url.startswith("postgresql://"):
+        url = "postgresql+psycopg://" + url[len("postgresql://"):]
+    return url
+
+
+DATABASE_URL = _database_url()
 
 # Change SECRET_KEY in any real deployment. It signs the login tokens.
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-only-secret-change-me-before-deploying-0123456789")

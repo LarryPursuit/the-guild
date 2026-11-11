@@ -7,7 +7,8 @@ from .config import DATABASE_URL
 # SQLite needs check_same_thread=False because FastAPI may use the session across threads.
 connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
 
-engine = create_engine(DATABASE_URL, connect_args=connect_args)
+# pool_pre_ping drops connections a hosted database closed while the serverless function was idle.
+engine = create_engine(DATABASE_URL, connect_args=connect_args, pool_pre_ping=True)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
 
 

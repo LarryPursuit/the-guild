@@ -90,6 +90,17 @@ All routes except register, login and health need an `Authorization: Bearer <tok
 | POST | `/api/quests/{id}/reward` | Retry a reward that failed because the API was down |
 | GET | `/api/health` | Health check |
 
+## Deploying to Vercel
+
+The repo deploys as **one Vercel project**: Vite builds the React app into `frontend/dist`, and `api/index.py` runs the FastAPI backend as a serverless function. `vercel.json` sends every `/api/*` request to the function and every other path to the React app, so both share one domain and no CORS setup is needed.
+
+1. In Vercel, **Add New → Project** and import this GitHub repo. Leave the root directory as `./`; the build settings come from `vercel.json`.
+2. Under the project's **Storage** tab, add a **Neon** Postgres database and connect it to the project. This sets `DATABASE_URL` for you. Tables are created on the first request.
+3. Under **Settings → Environment Variables**, add `SECRET_KEY` (generate one with `python -c "import secrets; print(secrets.token_hex(32))"`).
+4. Deploy. Every push to `main` redeploys; pull requests get preview URLs.
+
+Without a database the API falls back to SQLite in `/tmp`, which Vercel wipes regularly, so accounts and quests won't last.
+
 ## Configuration
 
 Set in `backend/.env` (see `.env.example`):
