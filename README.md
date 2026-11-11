@@ -7,6 +7,7 @@ A productivity app styled as a fantasy Adventurers' Guild. Create **guilds** aro
 ## Features
 
 - **Accounts:** register and log in (bcrypt-hashed passwords, JWT tokens).
+- **Demo adventurer:** "Try a demo adventurer" on the login page creates a separate, pre-filled account (3 guilds, 8 quests, some loot) and logs it in, no sign-up needed. Set `DEMO_ENABLED=false` to turn it off.
 - **Guilds (full CRUD):** create, view, rename and disband guilds.
 - **Quests (full CRUD):** post, edit, complete and delete quests with a difficulty (Easy 10 XP, Medium 25 XP, Hard 50 XP) and an optional due date. Overdue quests are highlighted.
 - **XP and ranks:** completing a quest adds XP on the server; a rank-up is announced in the reward screen.
@@ -78,6 +79,7 @@ All routes except register, login and health need an `Authorization: Bearer <tok
 | --- | --- | --- |
 | POST | `/api/auth/register` | Create an account; returns a token and the user |
 | POST | `/api/auth/login` | Log in; returns a token and the user |
+| POST | `/api/auth/demo` | Create a pre-filled demo adventurer; returns a token and the user |
 | GET | `/api/users/me` | Current adventurer (XP, rank, next rank) |
 | PATCH | `/api/users/me` | Set character class (validated against the D&D API) |
 | GET | `/api/classes` | D&D classes from the API (503 if unavailable) |

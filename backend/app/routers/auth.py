@@ -4,6 +4,8 @@ from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
+from ..config import DEMO_ENABLED
+from ..demo import create_demo_user
 from ..auth import create_access_token, hash_password, verify_password
 from ..database import get_db
 from ..serializers import user_out
@@ -38,4 +40,13 @@ def login(data: schemas.LoginRequest, db: Session = Depends(get_db)):
     user = db.scalar(select(models.User).where(models.User.username == data.username.strip()))
     if user is None or not verify_password(data.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Incorrect username or password.")
+    return schemas.TokenOut(access_token=create_access_token(user.id), user=user_out(user))
+
+
+@router.post("/demo", response_model=schemas.TokenOut, status_code=status.HTTP_201_CREATED)
+def demo(db: Session = Depends(get_db)):
+    """Create a fresh demo adventurer with sample guilds, quests and loot, and log them in."""
+    if not DEMO_ENABLED:
+        raise HTTPException(status_code=404, detail="The demo is turned off.")
+    user = create_demo_user(db)
     return schemas.TokenOut(access_token=create_access_token(user.id), user=user_out(user))

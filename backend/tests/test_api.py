@@ -156,3 +156,22 @@ def test_classes_api_down_returns_503(auth_client, broken_dnd):
     res = auth_client.get("/api/classes")
     assert res.status_code == 503
     assert "Try again" in res.json()["detail"]
+
+
+def test_demo_account_is_prefilled_and_logged_in(client):
+    res = client.post("/api/auth/demo")
+    assert res.status_code == 201, res.text
+    body = res.json()
+    assert body["user"]["xp"] == 85 and body["user"]["character_class"] == "Ranger"
+    client.headers["Authorization"] = f"Bearer {body['access_token']}"
+    guilds = client.get("/api/guilds").json()
+    assert len(guilds) == 3
+    assert sum(g["open_quests"] for g in guilds) == 6
+    assert len(client.get("/api/rewards").json()) == 3
+
+
+def test_each_demo_account_is_separate(client):
+    a = client.post("/api/auth/demo").json()
+    b = client.post("/api/auth/demo").json()
+    assert a["user"]["id"] != b["user"]["id"]
+    assert a["user"]["username"] != b["user"]["username"]

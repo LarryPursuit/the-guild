@@ -33,5 +33,8 @@ TOKEN_EXPIRE_MINUTES = int(os.getenv("TOKEN_EXPIRE_MINUTES", "1440"))  # 24 hour
 DND_API_BASE = os.getenv("DND_API_BASE", "https://www.dnd5eapi.co/api/2014")
 DND_API_TIMEOUT = float(os.getenv("DND_API_TIMEOUT", "5"))
 
+# "Try the demo" button: set DEMO_ENABLED=false to turn it off.
+DEMO_ENABLED = os.getenv("DEMO_ENABLED", "true").lower() not in ("0", "false", "no")
+
 # Comma-separated list of frontend origins allowed to call the API.
 CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")

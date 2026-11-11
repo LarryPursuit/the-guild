@@ -8,7 +8,7 @@ import RankBadge from '../components/RankBadge'
 const RANKS = ['Copper', 'Silver', 'Gold', 'Mythril']
 
 export default function AuthPage() {
-  const { login, register } = useAuth()
+  const { login, register, demo } = useAuth()
   const navigate = useNavigate()
   const [mode, setMode] = useState('login') // 'login' | 'register'
   const [form, setForm] = useState({ username: '', email: '', password: '' })
@@ -37,6 +37,18 @@ export default function AuthPage() {
     }
   }
 
+  const tryDemo = async () => {
+    setError('')
+    setSubmitting(true)
+    try {
+      await demo()
+      navigate('/')
+    } catch (err) {
+      setError(err.message)
+      setSubmitting(false)
+    }
+  }
+
   return (
     <main className="front-desk">
       <div className="front-desk-intro">
@@ -51,6 +63,12 @@ export default function AuthPage() {
             <li key={rank}><RankBadge rank={rank} /></li>
           ))}
         </ul>
+        <div className="demo-cta">
+          <button type="button" className="btn btn-demo" onClick={tryDemo} disabled={submitting}>
+            Try a demo adventurer
+          </button>
+          <p>No sign-up. You get your own board with sample guilds, quests and loot.</p>
+        </div>
       </div>
 
       <div className="corkboard front-desk-board">

@@ -37,9 +37,10 @@ export function AuthProvider({ children }) {
 
   const login = async (username, password) => handleAuth(await api.login({ username, password }))
   const register = async (form) => handleAuth(await api.register(form))
+  const demo = async () => handleAuth(await api.demo())
 
   return (
-    <AuthContext.Provider value={{ user, setUser, checking, login, register, logout }}>
+    <AuthContext.Provider value={{ user, setUser, checking, login, register, demo, logout }}>
       {children}
     </AuthContext.Provider>
   )

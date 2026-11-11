@@ -266,6 +266,12 @@ fieldset.field legend { padding: 0; margin-bottom: 0.3rem; }
 .front-desk-notice .btn-primary { font-weight: 700; padding: 0.65rem 1rem; margin-top: 0.25rem; }
 .switch-mode { margin: 0; text-align: center; color: var(--ink-soft); font-size: 0.9rem; }
 
+/* Demo button on the dark front desk */
+.demo-cta { margin-top: 2rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; }
+.demo-cta p { margin: 0; flex: 1 1 220px; font-size: 0.9rem; color: var(--mist); }
+.btn-demo { background: transparent; color: var(--amber); border-color: var(--amber); }
+.btn-demo:hover { background: rgba(224, 145, 47, 0.12); color: var(--amber-light); border-color: var(--amber-light); }
+
 /* ---------- Guild License (profile) ---------- */
 .license-layout { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start; margin-bottom: 2rem; }
 .license {

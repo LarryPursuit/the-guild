@@ -57,6 +57,7 @@ export const api = {
   // Auth
   register: (body) => request('/api/auth/register', { method: 'POST', body }),
   login: (body) => request('/api/auth/login', { method: 'POST', body }),
+  demo: () => request('/api/auth/demo', { method: 'POST' }),
 
   // Adventurer
   me: () => request('/api/users/me'),
